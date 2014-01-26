@@ -27,10 +27,10 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :libvirt do |libvirt|
     libvirt.driver = "qemu"
-    libvirt.host = "localhost"
-    libvirt.connect_via_ssh = true
+    libvirt.host = "a3s12"
+    libvirt.connect_via_ssh = false
     libvirt.username = "root"
-    libvirt.storage_pool_name = "default"
+    libvirt.storage_pool_name = "vagrant-box-vm"
   end
 end
 """)
@@ -44,10 +44,10 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :libvirt do |libvirt|
     libvirt.driver = "qemu"
-    libvirt.host = "localhost"
-    libvirt.connect_via_ssh = true
+    libvirt.host = "a3s12"
+    libvirt.connect_via_ssh = false
     libvirt.username = "root"
-    libvirt.storage_pool_name = "default"
+    libvirt.storage_pool_name = "vagrant-box-vm"
   end
 end
 """)
@@ -81,10 +81,10 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider :libvirt do |libvirt|
     libvirt.driver = "qemu"
-    libvirt.host = "localhost"
-    libvirt.connect_via_ssh = true
+    libvirt.host = "a3s12"
+    libvirt.connect_via_ssh = false
     libvirt.username = "root"
-    libvirt.storage_pool_name = "default"
+    libvirt.storage_pool_name = "vagrant-box-vm"
   end
 end
 """)
@@ -111,7 +111,7 @@ def vagrant_create_base_box(build_num=None, distro='centos', ip='10.20.30.40'):
     fq_name = "%s_%s" %(distro, build_num)
     box_dir = "%s_box" %(fq_name)
     vm_name = "%s_vm" %(fq_name)
-    vm_qcow2_path = "/var/lib/libvirt/images/%s_%s.img" %(box_dir, vm_name)
+    vm_qcow2_path = "/home/ajayhn/vagrant-storage-pool/%s_%s.img" %(box_dir, vm_name)
     if distro == 'centos':
         pkgs_name = "contrail-install-packages-1.03-%s.el6.noarch.rpm" %(build_num)
         pkgs_url = "http://10.84.5.100/cs-shared/builder/centos64_os/%s/%s" %(build_num, pkgs_name)
@@ -135,9 +135,9 @@ def vagrant_create_base_box(build_num=None, distro='centos', ip='10.20.30.40'):
             with cd("/opt/contrail/contrail_packages"):
                 run("./setup.sh")
                 import pdb; pdb.set_trace()
-                run("pip-python install --upgrade /opt/contrail/contrail_installer/contrail_setup_utils/pycrypto-2.6.tar.gz")
                 run("pip-python install --upgrade /opt/contrail/contrail_installer/contrail_setup_utils/paramiko-1.11.0.tar.gz")
                 run("pip-python install --upgrade --no-deps /opt/contrail/contrail_installer/contrail_setup_utils/Fabric-1.7.0.tar.gz")
+                run("pip-python install --upgrade /opt/contrail/contrail_installer/contrail_setup_utils/pycrypto-2.6.tar.gz")
 
             with settings(warn_only=True):
                 run("mv /lib/udev/write_net_rules /tmp")
@@ -166,7 +166,7 @@ def _create_role_box(role, build_num, distro, ip):
 
     box_dir = "%s_box" %(fq_name)
     vm_name = "%s_vm" %(fq_name)
-    vm_qcow2_path = "/var/lib/libvirt/images/%s_%s.img" %(box_dir, vm_name)
+    vm_qcow2_path = "/home/ajayhn/vagrant-storage-pool/%s_%s.img" %(box_dir, vm_name)
     if distro == 'centos':
         pass
     else:
@@ -214,9 +214,9 @@ def _create_role_box(role, build_num, distro, ip):
                         run("fab install_openstack")
 
                     #import pdb; pdb.set_trace()
-                    run("pip-python install --upgrade /opt/contrail/contrail_installer/contrail_setup_utils/pycrypto-2.6.tar.gz")
                     run("pip-python install --upgrade /opt/contrail/contrail_installer/contrail_setup_utils/paramiko-1.11.0.tar.gz")
                     run("pip-python install --upgrade --no-deps /opt/contrail/contrail_installer/contrail_setup_utils/Fabric-1.7.0.tar.gz")
+                    run("pip-python install --upgrade /opt/contrail/contrail_installer/contrail_setup_utils/pycrypto-2.6.tar.gz")
             
         local("vagrant halt")
         local("cp %s box.img" %(vm_qcow2_path))
